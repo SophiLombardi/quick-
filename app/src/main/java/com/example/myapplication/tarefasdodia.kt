@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -22,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -126,7 +128,7 @@ private fun TarefasHeader(moedas: Int) {
             )
             Spacer(modifier = Modifier.width(6.dp))
             Text(
-                text = "$moedas",
+                text = "$moedas -",
                 fontWeight = FontWeight.Bold,
                 color = CorTextoPrincipal
             )
@@ -262,17 +264,26 @@ private fun CheckboxCircular(marcado: Boolean) {
 
 @Composable
 private fun TarefasBottomNavBar() {
+
+    val context = LocalContext.current
+
     NavigationBar(containerColor = CorCard) {
         NavigationBarItem(
             selected = false,
-            onClick = { },
+            onClick = {
+                val intent = Intent(context, PetHome::class.java)
+                context.startActivity(intent)
+            },
             icon = { Text(text = "🏠", fontSize = 18.sp) },
             label = { Text(text = "Início", fontSize = 11.sp) },
             colors = itemColors()
         )
         NavigationBarItem(
             selected = false,
-            onClick = { },
+            onClick = {
+                val intent = Intent(context, Calendario::class.java)
+                context.startActivity(intent)
+            },
             icon = { Text(text = "📅", fontSize = 18.sp) },
             label = { Text(text = "Calendário", fontSize = 11.sp) },
             colors = itemColors()
