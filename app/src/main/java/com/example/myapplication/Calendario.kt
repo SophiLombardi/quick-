@@ -1,6 +1,7 @@
 package com.example.myapplication
 
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -47,11 +48,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlin.jvm.java
 
 class Calendario : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -364,46 +367,138 @@ fun TaskItemCard(task: TaskUIModel) {
     }
 }
 
-// --- 4. BARRA INFERIOR ---
 @Composable
 fun BottomNavigationBar() {
+
+    val context = LocalContext.current
+
     NavigationBar(
         containerColor = Color.White,
         tonalElevation = 8.dp
     ) {
-        val items = listOf(
-            NavItem("Início", Icons.Outlined.Home, isSelected = false,),
-            NavItem("Calendário", Icons.Outlined.DateRange, isSelected = true),
-            NavItem("Tarefas", Icons.Outlined.List, isSelected = false),
-            NavItem("Loja", Icons.Outlined.ShoppingCart, isSelected = false),
-            NavItem("Perfil", Icons.Outlined.Person, isSelected = false)
+
+        NavigationBarItem(
+            selected = false,
+            onClick = {
+                val intent = Intent(context, PetHome::class.java)
+                context.startActivity(intent)
+            },
+            icon = {
+                Icon(
+                    imageVector = Icons.Outlined.Home,
+                    contentDescription = "Início",
+                    tint = GrayText
+                )
+            },
+            label = {
+                Text(
+                    text = "Início",
+                    color = GrayText,
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Normal
+                )
+            },
+            colors = NavigationBarItemDefaults.colors(
+                indicatorColor = Color.Transparent
+            )
         )
 
-        items.forEach { item ->
-            NavigationBarItem(
-                selected = item.isSelected,
-                onClick = {},
-                icon = {
-                    Icon(
-                        imageVector = item.icon,
-                        contentDescription = item.label,
-                        tint = if (item.isSelected) PrimaryGreen else GrayText
-                    )
-                },
-                label = {
-                    Text(
-                        text = item.label,
-                        color = if (item.isSelected) PrimaryGreen else GrayText,
-                        fontSize = 11.sp,
-                        fontWeight = if (item.isSelected) FontWeight.Bold else FontWeight.Normal
-                    )
-                },
-                colors = NavigationBarItemDefaults.colors(
-                    indicatorColor = Color.Transparent
+        NavigationBarItem(
+            selected = true,
+            onClick = {},
+            icon = {
+                Icon(
+                    imageVector = Icons.Outlined.DateRange,
+                    contentDescription = "Calendário",
+                    tint = PrimaryGreen
                 )
+            },
+            label = {
+                Text(
+                    text = "Calendário",
+                    color = PrimaryGreen,
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            colors = NavigationBarItemDefaults.colors(
+                indicatorColor = Color.Transparent
             )
-        }
+        )
+
+        NavigationBarItem(
+            selected = false,
+            onClick = {
+                val intent = Intent(context, MainActivity::class.java)
+                context.startActivity(intent)
+            },
+            icon = {
+                Icon(
+                    imageVector = Icons.Outlined.List,
+                    contentDescription = "Tarefas",
+                    tint = GrayText
+                )
+            },
+            label = {
+                Text(
+                    text = "Tarefas",
+                    color = GrayText,
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Normal
+                )
+            },
+            colors = NavigationBarItemDefaults.colors(
+                indicatorColor = Color.Transparent
+            )
+        )
+
+        NavigationBarItem(
+            selected = false,
+            onClick = {
+            },
+            icon = {
+                Icon(
+                    imageVector = Icons.Outlined.ShoppingCart,
+                    contentDescription = "Loja",
+                    tint = GrayText
+                )
+            },
+            label = {
+                Text(
+                    text = "Loja",
+                    color = GrayText,
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Normal
+                )
+            },
+            colors = NavigationBarItemDefaults.colors(
+                indicatorColor = Color.Transparent
+            )
+        )
+
+        NavigationBarItem(
+            selected = false,
+            onClick = {
+            },
+            icon = {
+                Icon(
+                    imageVector = Icons.Outlined.Person,
+                    contentDescription = "Perfil",
+                    tint = GrayText
+                )
+            },
+            label = {
+                Text(
+                    text = "Perfil",
+                    color = GrayText,
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Normal
+                )
+            },
+            colors = NavigationBarItemDefaults.colors(
+                indicatorColor = Color.Transparent
+            )
+        )
     }
 }
-
 data class NavItem(val label: String, val icon: ImageVector, val isSelected: Boolean)
