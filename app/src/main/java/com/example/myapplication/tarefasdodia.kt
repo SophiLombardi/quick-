@@ -9,8 +9,15 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.DateRange
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.List
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -274,7 +281,13 @@ private fun TarefasBottomNavBar() {
                 val intent = Intent(context, PetHome::class.java)
                 context.startActivity(intent)
             },
-            icon = { Text(text = "🏠", fontSize = 18.sp) },
+            icon = {
+                Icon(
+                    imageVector = Icons.Outlined.Home,
+                    contentDescription = "Início",
+                    tint = GrayText
+                )
+            },
             label = { Text(text = "Início", fontSize = 11.sp) },
             colors = itemColors()
         )
@@ -284,28 +297,52 @@ private fun TarefasBottomNavBar() {
                 val intent = Intent(context, Calendario::class.java)
                 context.startActivity(intent)
             },
-            icon = { Text(text = "📅", fontSize = 18.sp) },
+            icon = {
+                Icon(
+                    imageVector = Icons.Outlined.DateRange,
+                    contentDescription = "Calendário",
+                    tint = PrimaryGreen
+                )
+            },
             label = { Text(text = "Calendário", fontSize = 11.sp) },
             colors = itemColors()
         )
         NavigationBarItem(
             selected = true,
             onClick = { },
-            icon = { Text(text = "📋", fontSize = 18.sp) },
+            icon = {
+                Icon(
+                    imageVector = Icons.Outlined.List,
+                    contentDescription = "Tarefas",
+                    tint = GrayText
+                )
+            },
             label = { Text(text = "Tarefas", fontSize = 11.sp) },
             colors = itemColors()
         )
         NavigationBarItem(
             selected = false,
             onClick = { },
-            icon = { Text(text = "🛒", fontSize = 18.sp) },
+            icon = {
+                Icon(
+                    imageVector = Icons.Outlined.ShoppingCart,
+                    contentDescription = "Loja",
+                    tint = GrayText
+                )
+            },
             label = { Text(text = "Loja", fontSize = 11.sp) },
             colors = itemColors()
         )
         NavigationBarItem(
             selected = false,
             onClick = { },
-            icon = { Text(text = "👤", fontSize = 18.sp) },
+            icon = {
+                Icon(
+                    imageVector = Icons.Outlined.Person,
+                    contentDescription = "Perfil",
+                    tint = GrayText
+                )
+            },
             label = { Text(text = "Perfil", fontSize = 11.sp) },
             colors = itemColors()
         )
