@@ -70,8 +70,6 @@ class Calendario : ComponentActivity() {
 fun CalendarScreenPreview() {
     CalendarScreen()
 }
-
-// --- CORES ---
 val BackgroundColor = Color(0xFFFFFDF6)
 val PrimaryGreen = Color(0xFF1ABC9C)
 val SoftGreen = Color(0xFFE8F8F5)
