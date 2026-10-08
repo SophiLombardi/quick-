@@ -29,12 +29,34 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myapplication.R
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.NavController
 
 class PetHome : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            PetHomeScreen()
+            val navController = rememberNavController()
+
+            NavHost(
+                navController = navController,
+                startDestination = "home"
+            ) {
+                composable("home") {
+                    PetHomeScreen(navController = navController)
+                }
+                composable("adicionar_tarefa") {
+                    AddTaskScreen(
+                        onBack = { navController.popBackStack() },
+                        onSave = { description, days, reward ->
+                            // Lógica de guardar a tarefa...
+                            navController.popBackStack()
+                        }
+                    )
+                }
+            }
         }
     }
 }
@@ -50,7 +72,7 @@ val TextDark = Color(0xFF2B3A42)
 val TextGray = Color(0xFF8C9BA5)
 
 @Composable
-fun PetHomeScreen() {
+fun PetHomeScreen(navController: NavController) {
     Scaffold(
         containerColor = CreamBg,
         bottomBar = { CustomBottomNavigation(currentRoute = "home") }
@@ -65,7 +87,7 @@ fun PetHomeScreen() {
             Spacer(modifier = Modifier.height(8.dp))
             TopHeaderSection()
             PetHeroSection()
-            TaskSectionHeader()
+            TaskSectionHeader(navController = navController)
             TaskItem(title = "Alimentar o Petzinho", reward = "+10")
             TaskItem(title = "Estudar Português 15min", reward = "+25")
         }
@@ -198,7 +220,7 @@ fun PetHeroSection() {
 }
 
 @Composable
-fun TaskSectionHeader() {
+fun TaskSectionHeader(navController: NavController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -214,7 +236,9 @@ fun TaskSectionHeader() {
         )
 
         FloatingActionButton(
-            onClick = {},
+            onClick = {
+                navController.navigate("adicionar_tarefa")
+            },
             containerColor = TealPrimary,
             contentColor = Color.White,
             shape = RoundedCornerShape(12.dp),
@@ -334,7 +358,7 @@ private val bottomNavEntries = listOf(
         route = "profile",
         icon = Icons.Default.Person,
         label = "Perfil",
-        targetActivity = null // ainda não implementada
+        targetActivity = Perfil::class.java // ainda não implementada
     )
 )
 
