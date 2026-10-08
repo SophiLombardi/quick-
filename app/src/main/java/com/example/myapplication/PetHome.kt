@@ -334,7 +334,7 @@ private val bottomNavEntries = listOf(
         route = "profile",
         icon = Icons.Default.Person,
         label = "Perfil",
-        targetActivity = null // ainda não implementada
+        targetActivity = Perfil::class.java // ainda não implementada
     )
 )
 

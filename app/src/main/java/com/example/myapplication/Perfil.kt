@@ -1,7 +1,10 @@
 package com.example.myapplication
 
 import android.net.Uri
+import android.os.Bundle
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -33,6 +36,15 @@ import coil.request.ImageRequest
 /* ============================================================
  *                 TELA DE PERFIL (VISUALIZAÇÃO)
  * ============================================================ */
+
+class Perfil : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            ProfileScreen()
+        }
+    }
+}
 
 @Composable
 fun ProfileScreen(
