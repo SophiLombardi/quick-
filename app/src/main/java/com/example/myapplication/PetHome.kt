@@ -7,12 +7,16 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -22,6 +26,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import com.example.myapplication.R
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.NavHost
@@ -44,7 +52,10 @@ class PetHome : ComponentActivity() {
                 composable("adicionar_tarefa") {
                     AddTaskScreen(
                         onBack = { navController.popBackStack() },
-                        onSave = { _, _, _ ->
+                        onSave = { description, _, reward ->
+                            if (description.isNotBlank()) {
+                                TaskRepository.addTask(description, reward)
+                            }
                             navController.popBackStack()
                         }
                     )
@@ -57,32 +68,45 @@ class PetHome : ComponentActivity() {
 // Cores
 val CreamBg = Color(0xFFFFFDF7)
 val CardWhite = Color(0xFFFFFFFF)
+private val CorTrilhaProgresso = Color(0xFFE7E1D2)
 val OrangeBadge = Color(0xFFFFA000)
 val YellowCoinBg = Color(0xFFFFF5D6)
 val YellowCoinBorder = Color(0xFFFFD54F)
 val TealPrimary = Color(0xFF12C2A3)
+private val CorVerdeCheck = Color(0xFF3FBF7F)
 val TextDark = Color(0xFF2B3A42)
 val TextGray = Color(0xFF8C9BA5)
 
 @Composable
 fun PetHomeScreen(navController: NavController) {
+    // Observa as tarefas em tempo real; só mostra as que ainda faltam fazer
+    val taskList by TaskRepository.tasks.collectAsState()
+    val pendingTasks = taskList.filter { !it.isCompleted }
+
     Scaffold(
         containerColor = CreamBg,
         bottomBar = { CustomBottomNavigation(currentRoute = "home") }
     ) { paddingValues ->
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
                 .padding(horizontal = 20.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Spacer(modifier = Modifier.height(8.dp))
-            TopHeaderSection()
-            PetHeroSection()
-            TaskSectionHeader(navController = navController)
-            TaskItem(title = "Alimentar o Petzinho", reward = "+10")
-            TaskItem(title = "Estudar Português 15min", reward = "+25")
+            item { Spacer(modifier = Modifier.height(8.dp)) }
+            item { TopHeaderSection() }
+            item { PetHeroSection() }
+            item { TaskSectionHeader(navController = navController) }
+
+            items(pendingTasks, key = { it.id }) { task ->
+                TaskItem(
+                    title = task.title,
+                    reward = "+${task.reward}"
+                )
+            }
+
+            item { Spacer(modifier = Modifier.height(16.dp)) }
         }
     }
 }
@@ -299,6 +323,30 @@ fun TaskItem(title: String, reward: String) {
                         .background(OrangeBadge)
                 )
             }
+        }
+    }
+}
+@Composable
+private fun CheckboxCircular(marcado: Boolean) {
+    Box(
+        modifier = Modifier
+            .size(24.dp)
+            .clip(CircleShape)
+            .background(if (marcado) CorVerdeCheck else Color.Transparent)
+            .border(
+                width = 2.dp,
+                color = if (marcado) Color.Transparent else CorTrilhaProgresso,
+                shape = CircleShape
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        if (marcado) {
+            Text(
+                text = "✓",
+                color = Color.White,
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Bold
+            )
         }
     }
 }

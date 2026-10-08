@@ -6,7 +6,14 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -26,6 +33,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -49,12 +58,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-private data class Tarefa(
-    val titulo: String,
-    val recompensa: Int,
-    val concluida: Boolean
-)
-
 private val CorFundo = Color(0xFFFDF6E9)
 private val CorCard = Color(0xFFFFFFFF)
 private val CorMoeda = Color(0xFFF4B740)
@@ -64,45 +67,43 @@ private val CorVerdeCheck = Color(0xFF3FBF7F)
 private val CorAzulProgresso = Color(0xFF5AA9E6)
 private val CorTrilhaProgresso = Color(0xFFE7E1D2)
 
-private val tarefasMock = listOf(
-    Tarefa("Arrumar cama", 10, concluida = true),
-    Tarefa("Escovar os dentes", 10, concluida = true),
-    Tarefa("Fazer lição de casa", 25, concluida = false),
-    Tarefa("Ler livro por 15min", 15, concluida = false),
-    Tarefa("Alimentar o companheiro", 10, concluida = false),
-    Tarefa("Tomar banho", 15, concluida = false)
-)
-
 @Composable
 fun TarefasDoDiaScreen() {
-    val concluidas = tarefasMock.count { it.concluida }
-    val total = tarefasMock.size
+    val taskList by TaskRepository.tasks.collectAsState()
+
+    val concluidas = taskList.count { it.isCompleted }
+    val total = taskList.size
 
     Scaffold(
         containerColor = CorFundo,
         bottomBar = { TarefasBottomNavBar() }
     ) { padding ->
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .background(CorFundo)
                 .padding(padding)
-                .padding(horizontal = 20.dp)
+                .padding(horizontal = 20.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Spacer(modifier = Modifier.height(16.dp))
-            TarefasHeader(moedas = 150)
-
-            Spacer(modifier = Modifier.height(20.dp))
-            ProgressoDoDia(concluidas = concluidas, total = total)
-
-            Spacer(modifier = Modifier.height(20.dp))
-            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                tarefasMock.forEach { tarefa ->
-                    TarefaCard(tarefa = tarefa)
+            item {
+                Column {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    TarefasHeader(moedas = 150)
+                    Spacer(modifier = Modifier.height(20.dp))
+                    ProgressoDoDia(concluidas = concluidas, total = total)
+                    Spacer(modifier = Modifier.height(8.dp))
                 }
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            items(taskList, key = { it.id }) { tarefa ->
+                TarefaCard(
+                    tarefa = tarefa,
+                    onToggle = { TaskRepository.toggleTaskCompletion(tarefa.id) }
+                )
+            }
+
+            item { Spacer(modifier = Modifier.height(24.dp)) }
         }
     }
 }
@@ -193,9 +194,14 @@ private fun ProgressoDoDia(concluidas: Int, total: Int) {
 }
 
 @Composable
-private fun TarefaCard(tarefa: Tarefa) {
+private fun TarefaCard(
+    tarefa: TaskItemData,
+    onToggle: () -> Unit
+) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onToggle() },
         colors = CardDefaults.cardColors(containerColor = CorCard),
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
@@ -207,14 +213,17 @@ private fun TarefaCard(tarefa: Tarefa) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                CheckboxCircular(marcado = tarefa.concluida)
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.weight(1f)
+            ) {
+                CheckboxCircular(marcado = tarefa.isCompleted)
                 Spacer(modifier = Modifier.width(12.dp))
                 Text(
-                    text = tarefa.titulo,
+                    text = tarefa.title,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = if (tarefa.concluida) CorTextoSecundario else CorTextoPrincipal
+                    color = if (tarefa.isCompleted) CorTextoSecundario else CorTextoPrincipal
                 )
             }
 
@@ -233,7 +242,7 @@ private fun TarefaCard(tarefa: Tarefa) {
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = "+${tarefa.recompensa}",
+                        text = "+${tarefa.reward}",
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
                         color = CorTextoPrincipal
@@ -338,7 +347,10 @@ private fun TarefasBottomNavBar() {
         )
         NavigationBarItem(
             selected = false,
-            onClick = { },
+            onClick = {
+                val intent = Intent(context, Perfil::class.java)
+                context.startActivity(intent)
+            },
             icon = {
                 Icon(
                     imageVector = Icons.Outlined.Person,
