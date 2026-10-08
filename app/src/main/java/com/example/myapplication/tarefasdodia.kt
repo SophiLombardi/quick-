@@ -135,7 +135,7 @@ private fun TarefasHeader(moedas: Int) {
             )
             Spacer(modifier = Modifier.width(6.dp))
             Text(
-                text = "$moedas -",
+                text = "$moedas ",
                 fontWeight = FontWeight.Bold,
                 color = CorTextoPrincipal
             )
@@ -322,7 +322,10 @@ private fun TarefasBottomNavBar() {
         )
         NavigationBarItem(
             selected = false,
-            onClick = { },
+            onClick = {
+                val intent = Intent(context, Loja::class.java)
+                context.startActivity(intent)
+            },
             icon = {
                 Icon(
                     imageVector = Icons.Outlined.ShoppingCart,

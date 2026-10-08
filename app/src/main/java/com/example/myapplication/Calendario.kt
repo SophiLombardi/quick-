@@ -453,6 +453,8 @@ fun BottomNavigationBar() {
         NavigationBarItem(
             selected = false,
             onClick = {
+                val intent = Intent(context, Loja::class.java)
+                context.startActivity(intent)
             },
             icon = {
                 Icon(

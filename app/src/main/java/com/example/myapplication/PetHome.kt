@@ -328,7 +328,7 @@ private val bottomNavEntries = listOf(
         route = "store",
         icon = Icons.Default.ShoppingCart,
         label = "Loja",
-        targetActivity = null // ainda não implementada
+        targetActivity = Loja::class.java // ainda não implementada
     ),
     BottomNavEntry(
         route = "profile",
