@@ -81,7 +81,6 @@ private val storeBackgrounds = listOf(
     StoreBackgroundUIModel("Montanhas Geladas", 550, "🏔️", Color(0xFFB3E5FC), Color(0xFFE1F5FE))
 )
 
-/* ---------- Tela ---------- */
 
 @Composable
 fun StoreScreen() {
@@ -146,7 +145,6 @@ fun StoreTopHeader(coins: Int) {
             fontWeight = FontWeight.Bold,
             color = DarkText
         )
-        // Mesmo selo de moedas usado na tela de Calendário
         CoinBadge(coins = coins)
     }
 }

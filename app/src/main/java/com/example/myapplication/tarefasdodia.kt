@@ -301,7 +301,7 @@ private fun TarefasBottomNavBar() {
                 Icon(
                     imageVector = Icons.Outlined.DateRange,
                     contentDescription = "Calendário",
-                    tint = PrimaryGreen
+                    tint = GrayText
                 )
             },
             label = { Text(text = "Calendário", fontSize = 11.sp) },
@@ -314,7 +314,7 @@ private fun TarefasBottomNavBar() {
                 Icon(
                     imageVector = Icons.Outlined.List,
                     contentDescription = "Tarefas",
-                    tint = GrayText
+                    tint = PrimaryGreen
                 )
             },
             label = { Text(text = "Tarefas", fontSize = 11.sp) },
