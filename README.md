@@ -27,19 +27,23 @@ a matéria de Desenvolvimento de Aplicativos Móveis no intuito de ser inovador 
 ## 🛸 Documentação do processo e das decisões
 1- Como estava o projeto no Trabalho 1, e o que mudou para chegar até aqui?
 adicionamos mais 4 telas, por exemplo a tela de adicionar tarefas interage com a tela inicial e tarefas do dia, nossa navegationbar está 100% funcional com seus itens.
+
 2 - Por que essas telas novas — o que cada uma faz e por que o trio escolheu elas?
 tela de loja -> o player poder personalizar o pet, ideias iniciais
 tela de perfil -> visualização da aba conquistas, telas base para um app que possui cadastro
 tela de conquistas -> mostra conquistas (ex: 5 dias em sequencia realizando todas as tarefas), inspiramos no duolingo e achamos uma ideia interessante pro quick!
-tela de adicionar tarefas -> adiciona uma tarefa na lista a ser realizado, ideias iniciais  
+tela de adicionar tarefas -> adiciona uma tarefa na lista a ser realizado, ideias iniciais
+
 3 - Que decisão de configuração/organização do código o trio tomou, e por quê? (ex: como
 organizaram as rotas, onde ficou a lista, como decidiram estruturar o NavHost)
 Gestão do Estado: Uso do TaskRepository (StateFlow) como fonte única de dados para sincronizar o estado entre PetHome e TarefasDoDiaScreen.
 Arquitetura de Navegação: Uso de NavHost local para o fluxo da AddTaskScreen e Intents para navegação entre as diferentes Activities da BottomBar.
 Modularização e Clean Code: Componentização com passagem de callbacks (lambdas) para manter o código testável e funcional no Preview do Compose.
+
 4 - Qual foi a complexidade extra que o trio colocou na tela de Detalhes (pedida na seção 3.2), e por
 que escolheram justamente essa?
 Na lista de tarefas, assim que a tarefa é marcada como concluída o texto fica grifado e cinza, junto da bolinha ao lado que fica na cor verde e um ✓ ao lado.
+
 5 - Algum integrante teve dificuldade em algum ponto? Como resolveram?
 Tivemos diversas dificuldade, mas a pior de todas seria o tempo e que podemos apenas realizar na sala de aula, onde há o android que utilizamos, que é um tempo bem curto pra complexidade do que é pedido.
 
