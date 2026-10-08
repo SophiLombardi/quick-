@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -16,11 +17,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,305 +30,36 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
-
-/* ============================================================
- *                 TELA DE PERFIL (VISUALIZAÇÃO)
- * ============================================================ */
+import coil.compose.rememberAsyncImagePainter
 
 class Perfil : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            ProfileScreen()
-        }
-    }
-}
-
-@Composable
-fun ProfileScreen(
-    onEditClick: () -> Unit = {},
-    onNavigate: (String) -> Unit = {}
-) {
-    // Estado global compartilhado com EditProfileScreen (veja ProfileViewModel)
-    val profile = rememberProfileState()
-
-    Scaffold(
-        containerColor = CreamBg,
-        bottomBar = { CustomBottomNavigation(currentRoute = "profile") }
-    ) { padding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 20.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            Spacer(Modifier.height(8.dp))
-
-            // Cabeçalho com botão editar
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Meu Perfil",
-                    color = TextDark,
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.ExtraBold
-                )
-                IconButton(
-                    onClick = onEditClick,
-                    modifier = Modifier
-                        .size(44.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(CardWhite)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Edit,
-                        contentDescription = "Editar perfil",
-                        tint = TealPrimary
-                    )
+            MaterialTheme {
+                Surface(modifier = Modifier.fillMaxSize()) {
+                    PerfilScreen()
                 }
             }
-
-            // Card do avatar + nome + bio
-            ProfileHeaderCard(
-                photoUri = profile.photoUri,
-                name = profile.name,
-                bio = profile.bio
-            )
-
-            // Estatísticas rápidas
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                StatCard("150", "Moedas", Modifier.weight(1f))
-                StatCard("2", "Nível", Modifier.weight(1f))
-                StatCard("12", "Tarefas", Modifier.weight(1f))
-            }
-
-            Text(
-                text = "CONQUISTAS",
-                color = TextDark,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.ExtraBold,
-                modifier = Modifier.padding(top = 8.dp)
-            )
-
-            AchievementRow("🏆", "Primeira tarefa concluída")
-            AchievementRow("🔥", "7 dias seguidos")
-            AchievementRow("⭐", "Alcançou o nível 2")
-
-            Spacer(Modifier.height(16.dp))
         }
     }
 }
 
 @Composable
-fun ProfileHeaderCard(photoUri: Uri?, name: String, bio: String) {
-    Card(
-        shape = RoundedCornerShape(24.dp),
-        colors = CardDefaults.cardColors(containerColor = CardWhite),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            // Avatar
-            Box(
-                modifier = Modifier
-                    .size(110.dp)
-                    .clip(CircleShape)
-                    .background(YellowCoinBg)
-                    .border(3.dp, TealPrimary, CircleShape),
-                contentAlignment = Alignment.Center
-            ) {
-                if (photoUri != null) {
-                    AsyncImage(
-                        model = ImageRequest.Builder(LocalContext.current)
-                            .data(photoUri)
-                            .crossfade(true)
-                            .build(),
-                        contentDescription = "Foto de perfil",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .clip(CircleShape)
-                    )
-                } else {
-                    Icon(
-                        imageVector = Icons.Default.Person,
-                        contentDescription = "Sem foto",
-                        tint = TealPrimary,
-                        modifier = Modifier.size(60.dp)
-                    )
-                }
-            }
+fun PerfilScreen() {
+    var name by rememberSaveable { mutableStateOf("Usuário Quick") }
+    var bio by rememberSaveable { mutableStateOf("Focado em bater minhas metas diárias! 🚀") }
+    var imageUri by rememberSaveable { mutableStateOf<Uri?>(null) }
 
-            Text(
-                text = name.ifBlank { "Sem nome" },
-                color = TextDark,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.ExtraBold
-            )
-
-            Box(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(50))
-                    .background(OrangeBadge)
-                    .padding(horizontal = 12.dp, vertical = 4.dp)
-            ) {
-                Text(
-                    text = "NÍVEL 2",
-                    color = Color.White,
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-
-            Text(
-                text = bio.ifBlank { "Sem bio ainda..." },
-                color = TextGray,
-                fontSize = 13.sp,
-                fontWeight = FontWeight.Normal,
-                modifier = Modifier.padding(horizontal = 8.dp)
-            )
-        }
-    }
-}
-
-@Composable
-fun StatCard(value: String, label: String, modifier: Modifier = Modifier) {
-    Card(
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = CardWhite),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        modifier = modifier
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 14.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = value,
-                color = TealPrimary,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.ExtraBold
-            )
-            Text(
-                text = label,
-                color = TextGray,
-                fontSize = 11.sp,
-                fontWeight = FontWeight.Medium
-            )
-        }
-    }
-}
-
-@Composable
-fun AchievementRow(emoji: String, title: String) {
-    Card(
-        shape = RoundedCornerShape(18.dp),
-        colors = CardDefaults.cardColors(containerColor = CardWhite),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(40.dp)
-                    .clip(CircleShape)
-                    .background(YellowCoinBg),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(text = emoji, fontSize = 20.sp)
-            }
-            Text(
-                text = title,
-                color = TextDark,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold
-            )
-        }
-    }
-}
-
-/* ============================================================
- *              TELA DE EDIÇÃO DE PERFIL (CUSTOMIZAÇÃO)
- * ============================================================ */
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun EditProfileScreen(
-    onBack: () -> Unit = {}
-) {
-    val profile = rememberProfileState()
     val context = LocalContext.current
-
-    // TextField estados locais (sincronizados ao salvar)
-    var nameInput by remember { mutableStateOf(profile.name) }
-    var bioInput by remember { mutableStateOf(profile.bio) }
-
-    // Launcher para escolher foto da galeria
-    val photoPicker = rememberLauncherForActivityResult(
+    val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        if (uri != null) {
-            // Persistir acesso ao URI
-            try {
-                context.contentResolver.takePersistableUriPermission(
-                    uri,
-                    android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION
-                )
-            } catch (_: Exception) { /* ignora se não for persistível */ }
-
-            profile.photoUri = uri
-        }
+        imageUri = uri
     }
 
     Scaffold(
-        containerColor = CreamBg,
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        "Editar Perfil",
-                        color = TextDark,
-                        fontWeight = FontWeight.ExtraBold
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Voltar",
-                            tint = TextDark
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = CreamBg
-                )
-            )
-        },
+        containerColor = QuickBgColor,
         bottomBar = { CustomBottomNavigation(currentRoute = "profile") }
     ) { padding ->
         Column(
@@ -336,161 +67,115 @@ fun EditProfileScreen(
                 .fillMaxSize()
                 .padding(padding)
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 20.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp)
+                .padding(horizontal = 24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(Modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
-            // ===== Avatar editável =====
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
+            // --- FOTO DE PERFIL ---
+            Box(contentAlignment = Alignment.BottomEnd) {
                 Box(
                     modifier = Modifier
-                        .size(130.dp)
+                        .size(120.dp)
                         .clip(CircleShape)
-                        .background(YellowCoinBg)
-                        .border(3.dp, TealPrimary, CircleShape)
-                        .clickable { photoPicker.launch("image/*") },
+                        .background(Color(0xFFFFD1DC))
+                        .border(4.dp, Color.White, CircleShape),
                     contentAlignment = Alignment.Center
                 ) {
-                    if (profile.photoUri != null) {
-                        AsyncImage(
-                            model = ImageRequest.Builder(context)
-                                .data(profile.photoUri)
-                                .crossfade(true)
-                                .build(),
-                            contentDescription = "Foto de perfil",
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .clip(CircleShape)
+                    if (imageUri != null) {
+                        Image(
+                            painter = rememberAsyncImagePainter(imageUri),
+                            contentDescription = "Foto de Perfil",
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
                         )
                     } else {
                         Icon(
                             imageVector = Icons.Default.Person,
-                            contentDescription = "Sem foto",
-                            tint = TealPrimary,
-                            modifier = Modifier.size(70.dp)
-                        )
-                    }
-
-                    // Overlay com ícone de câmera
-                    Box(
-                        modifier = Modifier
-                            .align(Alignment.BottomEnd)
-                            .size(38.dp)
-                            .clip(CircleShape)
-                            .background(TealPrimary)
-                            .border(3.dp, CreamBg, CircleShape),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Edit,
-                            contentDescription = "Trocar foto",
+                            contentDescription = "Foto de Perfil",
                             tint = Color.White,
-                            modifier = Modifier.size(18.dp)
+                            modifier = Modifier.size(80.dp)
                         )
                     }
                 }
 
-                Spacer(Modifier.height(8.dp))
-                TextButton(onClick = { photoPicker.launch("image/*") }) {
-                    Text(
-                        "Trocar foto",
-                        color = TealPrimary,
-                        fontWeight = FontWeight.Bold
+                // Botão editar foto
+                Surface(
+                    modifier = Modifier
+                        .size(36.dp)
+                        .clip(CircleShape)
+                        .clickable { launcher.launch("image/*") },
+                    color = QuickPrimaryGreen,
+                    shadowElevation = 4.dp
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = "Editar Foto",
+                        tint = Color.White,
+                        modifier = Modifier.padding(8.dp)
                     )
                 }
             }
 
-            // ===== Campo: Nome =====
-            FieldLabel("Nome de perfil")
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // --- CAMPOS DE EDIÇÃO ---
             OutlinedTextField(
-                value = nameInput,
-                onValueChange = { if (it.length <= 30) nameInput = it },
-                singleLine = true,
-                placeholder = { Text("Digite seu nome", color = TextGray) },
+                value = name,
+                onValueChange = { name = it },
+                label = { Text("Nome") },
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp),
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedContainerColor = CardWhite,
-                    unfocusedContainerColor = CardWhite,
-                    focusedBorderColor = TealPrimary,
-                    unfocusedBorderColor = Color(0xFFE0E0E0),
-                    focusedTextColor = TextDark,
-                    unfocusedTextColor = TextDark,
-                    cursorColor = TealPrimary
-                ),
-                shape = RoundedCornerShape(16.dp),
-                modifier = Modifier.fillMaxWidth()
+                    focusedBorderColor = QuickPrimaryGreen,
+                    cursorColor = QuickPrimaryGreen
+                )
             )
 
-            // ===== Campo: Bio =====
-            FieldLabel("Bio")
+            Spacer(modifier = Modifier.height(16.dp))
+
             OutlinedTextField(
-                value = bioInput,
-                onValueChange = { if (it.length <= 150) bioInput = it },
-                placeholder = {
-                    Text("Conte um pouco sobre você...", color = TextGray)
-                },
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedContainerColor = CardWhite,
-                    unfocusedContainerColor = CardWhite,
-                    focusedBorderColor = TealPrimary,
-                    unfocusedBorderColor = Color(0xFFE0E0E0),
-                    focusedTextColor = TextDark,
-                    unfocusedTextColor = TextDark,
-                    cursorColor = TealPrimary
-                ),
-                shape = RoundedCornerShape(16.dp),
+                value = bio,
+                onValueChange = { bio = it },
+                label = { Text("Bio") },
+                modifier = Modifier.fillMaxWidth(),
                 minLines = 3,
-                maxLines = 5,
-                modifier = Modifier.fillMaxWidth()
-            )
-            Text(
-                text = "${bioInput.length}/150",
-                color = TextGray,
-                fontSize = 11.sp,
-                modifier = Modifier.align(Alignment.End)
+                shape = RoundedCornerShape(12.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = QuickPrimaryGreen,
+                    cursorColor = QuickPrimaryGreen
+                )
             )
 
-            Spacer(Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
-            // ===== Botão Salvar =====
+            // --- BOTÃO PARA CONQUISTAS ---
             Button(
                 onClick = {
-                    profile.name = nameInput.trim()
-                    profile.bio = bioInput.trim()
-                    onBack()
+                    val intent = Intent(context, ConquistasActivity::class.java)
+                    context.startActivity(intent)
                 },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = TealPrimary,
-                    contentColor = Color.White
-                ),
+                modifier = Modifier.fillMaxWidth().height(56.dp),
                 shape = RoundedCornerShape(16.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(52.dp)
+                colors = ButtonDefaults.buttonColors(containerColor = QuickGold)
             ) {
-                Text(
-                    "Salvar alterações",
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.Bold
-                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(Icons.Default.Star, contentDescription = null)
+                    Spacer(Modifier.width(8.dp))
+                    Text("Ver Minhas Conquistas", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                }
             }
 
-            Spacer(Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                onClick = { /* Salvar alterações */ },
+                modifier = Modifier.fillMaxWidth().height(56.dp),
+                shape = RoundedCornerShape(16.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = QuickPrimaryGreen)
+            ) {
+                Text("Salvar Perfil", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+            }
         }
     }
-}
-
-@Composable
-fun FieldLabel(text: String) {
-    Text(
-        text = text,
-        color = TextDark,
-        fontSize = 13.sp,
-        fontWeight = FontWeight.Bold,
-        modifier = Modifier.padding(bottom = 6.dp)
-    )
 }

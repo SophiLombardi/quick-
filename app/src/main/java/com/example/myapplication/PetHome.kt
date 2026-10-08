@@ -1,14 +1,11 @@
 package com.example.myapplication
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,12 +17,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myapplication.R
@@ -50,8 +44,7 @@ class PetHome : ComponentActivity() {
                 composable("adicionar_tarefa") {
                     AddTaskScreen(
                         onBack = { navController.popBackStack() },
-                        onSave = { description, days, reward ->
-                            // Lógica de guardar a tarefa...
+                        onSave = { _, _, _ ->
                             navController.popBackStack()
                         }
                     )
@@ -307,132 +300,5 @@ fun TaskItem(title: String, reward: String) {
                 )
             }
         }
-    }
-}
-
-/* ============================================================
- *              BOTTOM NAVIGATION — TOTALMENTE FUNCIONAL
- * ============================================================ */
-
-/**
- * Modelo de cada item da barra de navegação.
- * @param route          identificador da rota
- * @param icon           ícone exibido
- * @param label          texto exibido
- * @param targetActivity Activity a abrir ao clicar (null = rota atual, não abre nada)
- */
-data class BottomNavEntry(
-    val route: String,
-    val icon: ImageVector,
-    val label: String,
-    val targetActivity: Class<*>?
-)
-
-// Lista centralizada de itens da barra
-private val bottomNavEntries = listOf(
-    BottomNavEntry(
-        route = "home",
-        icon = Icons.Default.Home,
-        label = "Início",
-        targetActivity = PetHome::class.java
-    ),
-    BottomNavEntry(
-        route = "calendar",
-        icon = Icons.Default.DateRange,
-        label = "Calendário",
-        targetActivity = Calendario::class.java
-    ),
-    BottomNavEntry(
-        route = "tasks",
-        icon = Icons.Default.List,
-        label = "Tarefas",
-        targetActivity = MainActivity::class.java
-    ),
-    BottomNavEntry(
-        route = "store",
-        icon = Icons.Default.ShoppingCart,
-        label = "Loja",
-        targetActivity = Loja::class.java // ainda não implementada
-    ),
-    BottomNavEntry(
-        route = "profile",
-        icon = Icons.Default.Person,
-        label = "Perfil",
-        targetActivity = Perfil::class.java // ainda não implementada
-    )
-)
-
-/**
- * Barra de navegação inferior com botões funcionais.
- *
- * @param currentRoute rota da tela atual — define qual item aparece selecionado.
- */
-@Composable
-fun CustomBottomNavigation(currentRoute: String = "home") {
-    val context = LocalContext.current
-
-    Surface(
-        color = CardWhite,
-        shadowElevation = 8.dp
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 10.dp),
-            horizontalArrangement = Arrangement.SpaceAround,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            bottomNavEntries.forEach { entry ->
-                BottomNavItem(
-                    entry = entry,
-                    isSelected = entry.route == currentRoute,
-                    onClick = {
-                        // Se for a rota atual, não faz nada (evita recarregar a tela)
-                        if (entry.route == currentRoute) return@BottomNavItem
-
-                        // Se tiver Activity alvo → abre via Intent
-                        entry.targetActivity?.let { target ->
-                            val intent = Intent(context, target).apply {
-                                // Evita empilhar telas duplicadas
-                                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or
-                                        Intent.FLAG_ACTIVITY_SINGLE_TOP
-                            }
-                            context.startActivity(intent)
-                        }
-                    }
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun BottomNavItem(
-    entry: BottomNavEntry,
-    isSelected: Boolean,
-    onClick: () -> Unit
-) {
-    val color = if (isSelected) TealPrimary else TextGray
-
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(4.dp),
-        modifier = Modifier
-            .clip(RoundedCornerShape(12.dp))
-            .clickable(onClick = onClick)      // 👈 AQUI está o clique funcional
-            .padding(horizontal = 12.dp, vertical = 6.dp)
-    ) {
-        Icon(
-            imageVector = entry.icon,
-            contentDescription = entry.label,
-            tint = color,
-            modifier = Modifier.size(22.dp)
-        )
-        Text(
-            text = entry.label,
-            color = color,
-            fontSize = 10.sp,
-            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
-        )
     }
 }
