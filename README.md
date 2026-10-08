@@ -83,6 +83,16 @@ quick-/
 └── README.md
 ```
 
+## 📸 Imagens
+
+![Tela Inicial](docs/pethome.jpeg)
+![Calendário](docs/calendario.jpeg)
+![Tarefas](docs/tarefas.jpeg)
+![Loja](docs/loja.jpeg)
+![Perfil](docs/perfil.jpeg)
+![Adicionar tarefa](docs/adicionartarefa.jpeg)
+![Conquistas](docs/conquistas.jpeg)
+
 ## 👥 Equipe
 
 - [@SophiLombardi](https://github.com/SophiLombardi)
