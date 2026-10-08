@@ -27,12 +27,12 @@ a matéria de Desenvolvimento de Aplicativos Móveis no intuito de ser inovador 
 ## ✨ Funcionalidades
 
 - [x] Tela de perfil
-- [ ] Tela de conquistas
-- [ ] Tela de listas de tarefas a fazer e concluídas
-- [ ] Tela de Loja
-- [ ] Tela de calendário
-- [ ] Tela principal com pet
-- [ ] Tela de adicionar tarefas
+- [x] Tela de conquistas
+- [x] Tela de listas de tarefas a fazer e concluídas
+- [x] Tela de Loja
+- [x] Tela de calendário
+- [x] Tela principal com pet
+- [x] Tela de adicionar tarefas
 
 ## 🛠 Tecnologias
 
