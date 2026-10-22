@@ -35,7 +35,9 @@ fun AppNavigation() {
             composable(Rotas.CALENDARIO) { CalendarScreen() }
             composable(Rotas.TAREFAS) { TaskListScreen(onOpen = { navController.navigate(Rotas.detalheTarefa(it)) }, onAdd = { navController.navigate(Rotas.ADICIONAR_TAREFA) }, onRewards = { navController.navigate(Rotas.RECOMPENSAS) }, onAchievements = { navController.navigate(Rotas.CONQUISTAS) }) }
             composable(Rotas.LOJA) { StoreScreen() }
-            composable(Rotas.PERFIL) { PerfilScreen() }
+            composable(route = Rotas.PERFIL) {
+                PerfilScreen(onNavigateBack = { navController.popBackStack() })
+            }
             composable(Rotas.ADICIONAR_TAREFA) {
                 AddTaskScreen(
                     onBack = { navController.popBackStack() },
