@@ -26,18 +26,21 @@ a matéria de Desenvolvimento de Aplicativos Móveis no intuito de ser inovador 
 
 ## 🛸 Documentação do processo e das decisões
 1- Como estava o projeto no Trabalho 2, e o que mudou para chegar até aqui?
-Foi adicionado um CRUD em nosso projeto e tambem o banco de dados 100% funcional em nosso codigo.
+Foi adicionado o CRUD em nosso projeto e tambem o banco de dados 100% funcional em nosso codigo.
 
 2 - Quais Entity, DAO e Database foram criados — e por que escolheram esses campos para cada Entity?
 
 
 3 - Como decidiram estruturar as queries do DAO (quais métodos além dos 4 básicos, se houver)?
+
+__anterior__
 Gestão do Estado: Uso do TaskRepository (StateFlow) como fonte única de dados para sincronizar o estado entre PetHome e TarefasDoDiaScreen.
 Arquitetura de Navegação: Uso de NavHost local para o fluxo da AddTaskScreen e Intents para navegação entre as diferentes Activities da BottomBar.
 Modularização e Clean Code: Componentização com passagem de callbacks (lambdas) para manter o código testável e funcional no Preview do Compose.
 
 4 - Qual foi a dificuldade em migrar de mutableStateListOf para Room? O que quebrou no caminho
 e como resolveram?
+__anterior__
 Na lista de tarefas, assim que a tarefa é marcada como concluída o texto fica grifado e cinza, junto da bolinha ao lado que fica na cor verde e um ✓ ao lado.
 
 5 - Algum integrante do trio teve dificuldade em algum ponto? Como resolveram?
