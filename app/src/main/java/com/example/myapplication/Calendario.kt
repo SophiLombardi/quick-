@@ -479,7 +479,7 @@ fun BottomNavigationBar() {
         NavigationBarItem(
             selected = false,
             onClick = {
-                val intent = Intent(context, Profile::class.java)
+                val intent = Intent(context, Perfil::class.java)
                 context.startActivity(intent)
             },
             icon = {

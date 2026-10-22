@@ -1,5 +1,8 @@
 package com.example.myapplication
 
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -12,21 +15,33 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
-// 1. Definição do Estado do Perfil (O que estava faltando)
+// Activity necessária para a navegação via Intent a partir de Calendario.kt
+class Perfil : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            MaterialTheme {
+                Surface(modifier = Modifier.fillMaxSize()) {
+                    PerfilScreen()
+                }
+            }
+        }
+    }
+}
+
 data class ProfileState(
     val userName: String = "Usuário",
     val totalPoints: Int = 0,
     val completedTasks: Int = 0
 )
 
-// 2. A função que o compilador não encontrava
 @Composable
 fun rememberProfileState(
     tasks: List<TaskItemData>
 ): ProfileState {
     return remember(tasks) {
         ProfileState(
-            userName = "Sophi", // Pode alterar para o nome real se tiver
+            userName = "Sophi",
             totalPoints = tasks.filter { it.isCompleted }.sumOf { it.reward },
             completedTasks = tasks.count { it.isCompleted }
         )
@@ -36,11 +51,8 @@ fun rememberProfileState(
 @Composable
 fun PerfilScreen(
     modifier: Modifier = Modifier,
-    // Puxando os dados do seu TaskRepository
-    tasks: List<TaskItemData> = TaskRepository.tasks.collectAsStateWithLifecycle().value,
-    onNavigateBack: () -> Unit = {}
+    tasks: List<TaskItemData> = TaskRepository.tasks.collectAsStateWithLifecycle().value
 ) {
-    // Agora o rememberProfileState funciona e sabe o tipo que retorna
     val profileState = rememberProfileState(tasks = tasks)
 
     LazyColumn(
@@ -50,7 +62,6 @@ fun PerfilScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // Cabeçalho do Perfil
         item {
             Text(
                 text = profileState.userName,
@@ -60,7 +71,6 @@ fun PerfilScreen(
             Spacer(modifier = Modifier.height(8.dp))
         }
 
-        // Estatísticas (Pontos e Tarefas)
         item {
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -78,7 +88,6 @@ fun PerfilScreen(
             }
         }
 
-        // Título da lista de tarefas concluídas
         item {
             Text(
                 text = "Tarefas Concluídas",
@@ -90,24 +99,23 @@ fun PerfilScreen(
             )
         }
 
-        // Lista de tarefas filtradas
-        // O erro do 'it' vermelho era porque o compilador não sabia o tipo de 'tasks'
         val completedTasks = tasks.filter { it.isCompleted }
 
         if (completedTasks.isEmpty()) {
             item {
-                Text(text = "Nenhuma tarefa concluída ainda.", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(
+                    text = "Nenhuma tarefa concluída ainda.",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
         } else {
             items(completedTasks) { task ->
-                // Aqui o 'it' foi substituído por 'task' que tem o tipo TaskItemData
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
                 ) {
                     Row(
                         modifier = Modifier
-                        modifier = Modifi
                             .fillMaxWidth()
                             .padding(16.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
