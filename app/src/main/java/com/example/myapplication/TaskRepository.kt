@@ -13,32 +13,36 @@ data class TaskItemData(
 )
 
 object TaskRepository {
-
+    // O _tasks PRECISA estar aqui dentro do object
     private val _tasks = MutableStateFlow(
         listOf(
             TaskItemData(id = 1, title = "Arrumar cama", reward = 10, isCompleted = true),
-            TaskItemData(id = 2, title = "Escovar os dentes", reward = 10, isCompleted = true),
-            TaskItemData(id = 3, title = "Fazer lição de casa", reward = 25),
-            TaskItemData(id = 4, title = "Ler livro por 15min", reward = 15),
-            TaskItemData(id = 5, title = "Alimentar o companheiro", reward = 10),
-            TaskItemData(id = 6, title = "Tomar banho", reward = 15)
+            TaskItemData(id = 2, title = "Lavar a louça", reward = 15, isCompleted = false),
+            TaskItemData(id = 3, title = "Estudar Kotlin", reward = 20, isCompleted = false)
         )
     )
-
     val tasks: StateFlow<List<TaskItemData>> = _tasks.asStateFlow()
 
     fun addTask(title: String, reward: Int) {
-        _tasks.update { current ->
-            val nextId = (current.maxOfOrNull { it.id } ?: 0L) + 1L
-            current + TaskItemData(id = nextId, title = title, reward = reward)
+        _tasks.update { currentTasks ->
+            val nextId = (currentTasks.maxOfOrNull { it.id } ?: 0L) + 1L
+            currentTasks + TaskItemData(id = nextId, title = title, reward = reward)
         }
     }
 
     fun toggleTaskCompletion(taskId: Long) {
-        _tasks.update { current ->
-            current.map { task ->
+        _tasks.update { currentTasks ->
+            currentTasks.map { task ->
                 if (task.id == taskId) task.copy(isCompleted = !task.isCompleted) else task
             }
+        }
+    }
+
+    // Função adicionada
+    fun removeTask(taskId: Long) {
+        _tasks.update { currentTasks ->
+            // O 'it' aqui dentro é resolvido automaticamente porque currentTasks é uma List<TaskItemData>
+            currentTasks.filterNot { it.id == taskId }
         }
     }
 }
