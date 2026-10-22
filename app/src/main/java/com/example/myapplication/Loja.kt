@@ -86,7 +86,7 @@ private val storeBackgrounds = listOf(
 fun StoreScreen() {
     Scaffold(
         containerColor = BackgroundColor,
-        bottomBar = { CustomBottomNavigation(currentRoute = "store") }
+        bottomBar = { CustomBottomNavigation(currentRoute = Rotas.LOJA) }
     ) { innerPadding ->
         LazyColumn(
             modifier = Modifier

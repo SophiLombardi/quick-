@@ -59,7 +59,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-// ---------- Cores (ajuste conforme seu tema do Figma) ----------
 private val AddTaskCream = Color(0xFFFFFCF0)
 private val AddTaskTeal = Color(0xFF1FBB9A)
 private val AddTaskCoinYellow = Color(0xFFFFC83D)

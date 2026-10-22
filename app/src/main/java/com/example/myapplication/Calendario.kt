@@ -95,7 +95,7 @@ val sampleTasks = listOf(
 fun CalendarScreen() {
     Scaffold(
         containerColor = BackgroundColor,
-        bottomBar = { BottomNavigationBar() }
+        bottomBar = { CustomBottomNavigation(currentRoute = Rotas.CALENDARIO) }
     ) { innerPadding ->
         LazyColumn(
             modifier = Modifier
@@ -479,6 +479,8 @@ fun BottomNavigationBar() {
         NavigationBarItem(
             selected = false,
             onClick = {
+                val intent = Intent(context, Perfil::class.java)
+                context.startActivity(intent)
             },
             icon = {
                 Icon(

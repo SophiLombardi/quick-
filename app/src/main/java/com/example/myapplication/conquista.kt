@@ -1,5 +1,8 @@
 package com.example.myapplication
 
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -10,7 +13,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
@@ -24,13 +27,22 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+class ConquistasActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            MaterialTheme {
+                TelaConquistasQuick(onVoltarClick = { finish() })
+            }
+        }
+    }
+}
+
 // --- PALETA DE CORES EXCLUSIVA DO QUICK ---
 val QuickBgColor = Color(0xFFFFFDF5)
 val QuickCardBg = Color(0xFFFFFFFF)
 val QuickPrimaryGreen = Color(0xFF24C59A)
-val QuickSecondaryGreen = Color(0xFF1EA883)
 val QuickGold = Color(0xFFFFB800)
-val QuickGoldDark = Color(0xFFE0A200)
 val QuickTextDark = Color(0xFF2D3748)
 val QuickTextMuted = Color(0xFFA0AEC0)
 val QuickLockedBg = Color(0xFFEDF2F7)
@@ -95,7 +107,7 @@ fun TelaConquistasQuick(
                 navigationIcon = {
                     IconButton(onClick = onVoltarClick) {
                         Icon(
-                            imageVector = Icons.Default.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Voltar",
                             tint = QuickTextDark
                         )
