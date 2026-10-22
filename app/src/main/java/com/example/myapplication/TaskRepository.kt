@@ -34,16 +34,6 @@ object TaskRepository {
         }
     }
 
-    fun removeTask(taskId: Long) {
-        _tasks.update { current -> current.filterNot { it.id == taskId } }
-    }
-
-    fun updateTask(taskId: Long, title: String, reward: Int) {
-        _tasks.update { current -> current.map { task ->
-            if (task.id == taskId) task.copy(title = title, reward = reward) else task
-        } }
-    }
-
     fun toggleTaskCompletion(taskId: Long) {
         _tasks.update { current ->
             current.map { task ->
