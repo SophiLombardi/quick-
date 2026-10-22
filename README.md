@@ -40,6 +40,7 @@ Modularização e Clean Code: Componentização com passagem de callbacks (lambd
 
 4 - Qual foi a dificuldade em migrar de mutableStateListOf para Room? O que quebrou no caminho
 e como resolveram?
+
 __anterior__
 Na lista de tarefas, assim que a tarefa é marcada como concluída o texto fica grifado e cinza, junto da bolinha ao lado que fica na cor verde e um ✓ ao lado.
 
