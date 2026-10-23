@@ -27,7 +27,6 @@ a matéria de Desenvolvimento de Aplicativos Móveis no intuito de ser inovador 
 ## 🛸 Documentação do processo e das decisões
 1- Como estava o projeto no Trabalho 2, e o que mudou para chegar até aqui?
 Foi adicionado um CRUD em nosso projeto e tambem o banco de dados 100% funcional em nosso codigo.
-Foi adicionado o CRUD em nosso projeto e tambem o banco de dados 100% funcional em nosso codigo.
 
 2 - Quais Entity, DAO e Database foram criados — e por que escolheram esses campos para cada Entity?
 
